@@ -4,4 +4,4 @@
 
 # FragGPT data
 
-Due to the size limit, train data and the pretrained checkpoints can be download from xxx
+The data and code are being organized and will be completed soon.
