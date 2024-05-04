@@ -1,0 +1,101 @@
+MODEL:
+  TOKENIZER_PATH: './tokenizer/admet_pubchem77M/tokenizer.json'
+  CHECKPOINT_PATH: './save/pubchem_chembl_admet_plus'
+  USE_MODEL_CKPT: False
+  MODEL_NAME: 'pubchem_chembl_admet_plus_2.pt'
+  USE_EMA: False
+  CAPTION_LOSS_WEIGHT: 1
+  CONTRASTIVE_LOSS_WEIGHT: 1
+  MATCHING_LOSS_WEIGHT: 1
+  TEMPERATURE: 0.5
+  ALPHA: 0.05
+  FRAG_MODEL:
+    n_layer: 3
+    n_head: 8
+    n_embd: 768
+
+  UNIMODAL:
+    n_layer: 6
+    n_head: 8
+    n_embd: 768
+
+  ADMET_MODEL:
+    n_layer: 6
+    n_head: 8
+    n_embd: 768
+
+  MULTIMODAL:
+    n_layer: 6
+    n_head: 8
+    n_embd: 768
+
+SOLVER:
+  TRAIN_BSZ: 16 # 104
+  VALID_BSZ: 16 # 104
+  MAX_EPOCHS: 20
+  WARMUP_STEP_RATIO: 0.05
+  WEIGHT_DECAY: 0.0
+  OPTIMIZER_NAME: "AdamW"
+  BASE_LR: 1.0e-4
+  NUM_WORKERS: 8
+  GRADIENT_ACC: 1
+  LR_SCHEDULER: "linear"
+  CLIP_GRAD: False
+  SAVE_STEP: 1
+
+DATA:
+  DATA_ROOT: "./data/pubchem77M_admet_frag"
+  MAX_SMILES_LEN: 256
+  VOCAB_SIZE: 1000
+  MIN_FREQUENCY: 2
+
+#MODEL:
+#  TOKENIZER_PATH: './tokenizer/admet_pubchem77M/tokenizer.json'
+#  CHECKPOINT_PATH: ''
+#  USE_MODEL_CKPT: False
+#  MODEL_NAME: ''
+#  USE_EMA: False
+#  CAPTION_LOSS_WEIGHT: 1
+#  CONTRASTIVE_LOSS_WEIGHT: 1
+#  MATCHING_LOSS_WEIGHT: 1
+#  TEMPERATURE: 0.5
+#  ALPHA: 0.05
+#  FRAG_MODEL:
+#    n_layer: 2
+#    n_head: 4
+#    n_embd: 768
+#
+#  UNIMODAL:
+#    n_layer: 6
+#    n_head: 8
+#    n_embd: 768
+#
+#  ADMET_MODEL:
+#    n_layer: 4
+#    n_head: 4
+#    n_embd: 768
+#
+#  MULTIMODAL:
+#    n_layer: 6
+#    n_head: 8
+#    n_embd: 768
+#
+#SOLVER:
+#  TRAIN_BSZ: 4 # 104
+#  VALID_BSZ: 4 # 104
+#  MAX_EPOCHS: 10
+#  WARMUP_STEP_RATIO: 0.05
+#  WEIGHT_DECAY: 0.0
+#  OPTIMIZER_NAME: "AdamW"
+#  BASE_LR: 1.0e-4
+#  NUM_WORKERS: 0
+#  GRADIENT_ACC: 1
+#  LR_SCHEDULER: "linear"
+#  CLIP_GRAD: False
+#  SAVE_STEP: 1
+#
+#DATA:
+#  DATA_ROOT: "./data/pubchem77M_admet_frag"
+#  MAX_SMILES_LEN: 256
+#  VOCAB_SIZE: 1000
+#  MIN_FREQUENCY: 2

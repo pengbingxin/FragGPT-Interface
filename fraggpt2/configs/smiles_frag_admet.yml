@@ -1,0 +1,61 @@
+MODEL:
+  TOKENIZER_PATH: './tokenizer/chembl_pubchem10M/tokenizer.json'
+  CHECKPOINT_PATH: './save/chembl_admet_finetune'
+  USE_MODEL_CKPT: True
+  MODEL_NAME: 'FragGPTNoSeedAdmet_50.pt'
+  USE_EMA: False
+  GPT_MODEL:
+    n_layer: 12 # 12
+    n_head: 8
+    n_embd: 768
+
+  ADMET_ENCODER:
+    use_admet: True
+    n_embd: 768
+    n_head: 8
+    n_layer: 3 # 3
+
+  ESM:
+    use_esm: False
+    cross_attention: False
+    prefix: False
+    average: False
+    q_fromer: False
+    input_dim: 768
+    hidden_dim: 64
+    num_heads: 8
+  ADAPTER:
+    use_adapter: False
+    adapter_name: xinlitai
+    REDUCTION_FACTOR: 16
+    ACTIVATION: 'gelu'
+    OPEN_HEAD: False
+
+  PEFT:
+    LoRA: False
+    OPEN_HEAD: False
+    r: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+
+SOLVER:
+  TRAIN_BSZ: 32 # 104
+  VALID_BSZ: 32 # 104
+  MAX_EPOCHS: 20
+  WARMUP_STEP_RATIO: 0.05
+  WEIGHT_DECAY: 0.0
+  OPTIMIZER_NAME: "AdamW"
+  BASE_LR: 1.0e-4
+  NUM_WORKERS: 8
+  GRADIENT_ACC: 1
+  LR_SCHEDULER: "linear"
+  CLIP_GRAD: False
+  SAVE_STEP: 2
+  PEPOCH: 1.0
+
+
+DATA:
+  DATA_ROOT: "./paper/delinker_admet"
+  MAX_SMILES_LEN: 512
+  VOCAB_SIZE: 1000
+  MIN_FREQUENCY: 2

@@ -1,0 +1,51 @@
+MODEL:
+  TOKENIZER_PATH: './tokenizer/chembl_pubchem10M/tokenizer.json'
+  # CHECKPOINT_PATH: './save/FragGPT_pubchem77_pretrain_no_breakring'
+  CHECKPOINT_PATH: './save/fraggpt'
+  USE_MODEL_CKPT: True
+  MODEL_NAME: 'model.pt'
+  USE_EMA: False
+  GPT_MODEL:
+    n_layer: 12
+    n_head: 8
+    n_embd: 768
+
+  ADMET_ENCODER:
+    use_admet: False
+    n_embd: 768
+    n_head: 8
+    n_layer: 3
+
+  ADAPTER:
+    use_adapter: False
+    adapter_name: zinc
+    REDUCTION_FACTOR: 16
+    ACTIVATION: 'gelu'
+
+  PEFT:
+    LoRA: False
+    OPEN_HEAD: False
+    r: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+
+SOLVER:
+  TRAIN_BSZ: 32 # 104
+  VALID_BSZ: 32 # 104
+  MAX_EPOCHS: 10
+  WARMUP_STEP_RATIO: 0.05
+  WEIGHT_DECAY: 0.0
+  OPTIMIZER_NAME: "AdamW"
+  BASE_LR: 1.0e-4
+  NUM_WORKERS: 8
+  GRADIENT_ACC: 1
+  LR_SCHEDULER: "linear"
+  CLIP_GRAD: False
+  SAVE_STEP: 2
+  PEPOCH: 1.0
+
+DATA:
+  DATA_ROOT: "./paper/pdbbind"
+  MAX_SMILES_LEN: 512
+  VOCAB_SIZE: 1000
+  MIN_FREQUENCY: 2

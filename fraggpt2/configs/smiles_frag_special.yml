@@ -1,0 +1,48 @@
+MODEL:
+  TOKENIZER_PATH: './tokenizer/chembl_pubchem10M/tokenizer.json'
+  CHECKPOINT_PATH: './save/FragGPT_pubchem77_pretrain_no_breakring_admet'
+  USE_MODEL_CKPT: True
+  MODEL_NAME: 'FragGPT_pubchem77_pretrain_no_breakring_admet_3.pt'
+  USE_EMA: False
+  GPT_MODEL:
+    n_layer: 12
+    n_head: 8
+    n_embd: 768
+
+  ADMET_ENCODER:
+    use_admet: True
+    n_embd: 768
+    n_head: 8
+    n_layer: 3
+
+  ADAPTER:
+    use_adapter: False
+    adapter_name: drugs
+    REDUCTION_FACTOR: 16
+    ACTIVATION: 'gelu'
+
+  PEFT:
+    LoRA: False
+    OPEN: False
+
+SOLVER:
+  TRAIN_BSZ: 16 # 104
+  VALID_BSZ: 16 # 104
+  MAX_EPOCHS: 20
+  WARMUP_STEP_RATIO: 0.05
+  WEIGHT_DECAY: 0.0
+  OPTIMIZER_NAME: "AdamW"
+  BASE_LR: 1.0e-4
+  NUM_WORKERS: 8
+  GRADIENT_ACC: 1
+  LR_SCHEDULER: "linear"
+  CLIP_GRAD: 20.0
+  SAVE_STEP: 1
+  PEPOCH: 0.9
+
+
+DATA:
+  DATA_ROOT: "./data/zinc/linker"
+  MAX_SMILES_LEN: 512
+  VOCAB_SIZE: 1000
+  MIN_FREQUENCY: 2

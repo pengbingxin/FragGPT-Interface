@@ -1,0 +1,16 @@
+task_type: reg  # reg cls
+smi_max_length: 192
+train_data_path: "/home/chenyu/proj/BEMT2/admet_inference/admet_all/raw/admet_all.csv"
+# test_data_path: "/home/chenyu/proj/BEMT2/admet_inference/admet_all/raw/admet_all.csv"
+# test_data_path: "pubchem_test.csv"
+test_data_path: "admet_predictor/temp/temp.csv"
+is_kfold: False    # 如果为True，则会训练K个模型，最后集成预测
+K: 20   # 5, 10, 20
+load_ckpt_method: best_model_for_valid     # best_model_for_valid,  last_epoch_model  只有is_kfold为False生效
+ouput_path: output
+num_train_epochs: 10   # 10-50, 5000左右
+freeze: False
+learning_rate: 0.0001   #  0.0001 0.00001 0.0005  (1e-5 ~ 2e-4)
+batch_size: 128   # 16, 32, 64(23.9G)
+reg_col_name: y_pred
+clip_grad: False  # 0-10

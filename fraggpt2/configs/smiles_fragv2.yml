@@ -1,0 +1,36 @@
+MODEL:
+  TOKENIZER_PATH: './tokenizer/chembl/tokenizer.json'
+  CHECKPOINT_PATH: './save/'
+  USE_MODEL_CKPT: False
+  MODEL_NAME: ''
+  USE_EMA: False
+  UNIMODAL:
+    n_layer: 6
+    n_head: 8
+    n_embd: 768
+
+  MULTIMODAL:
+    n_layer: 6
+    n_head: 8
+    n_embd: 768
+    add_cross_attention: False
+
+SOLVER:
+  TRAIN_BSZ: 16 # 104
+  VALID_BSZ: 16 # 104
+  MAX_EPOCHS: 20
+  WARMUP_STEP_RATIO: 0.05
+  WEIGHT_DECAY: 0.0
+  OPTIMIZER_NAME: "AdamW"
+  BASE_LR: 1.0e-4
+  NUM_WORKERS: 8
+  GRADIENT_ACC: 1
+  LR_SCHEDULER: "linear"
+  CLIP_GRAD: False
+  SAVE_STEP: 1
+
+DATA:
+  DATA_ROOT: "./data/chembl"
+  MAX_SMILES_LEN: 512
+  VOCAB_SIZE: 1000
+  MIN_FREQUENCY: 2

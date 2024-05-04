@@ -1,0 +1,51 @@
+DATASETS:
+  train_data_path: /mnt/g/tangui/BEMT2_QSAR/data/train_PPB.csv
+  test_data_path: /mnt/g/tangui/BEMT2_QSAR/data/test_ppb.csv
+  max_node: 256
+  smi_max_length: 192
+
+MODEL:
+  encoder_layers: 12
+  sandwich_ln: False
+  max_positions: 512
+  num_atoms: 4608  # 512*9
+  num_edges: 1536   # 512*3
+  num_in_degree: 512
+  num_out_degree: 512
+  num_spatial: 512
+  num_edge_dis: 128
+  multi_hop_max_dist: 5
+  edge_type: "multi_hop"
+  add_3d: False
+  num_3d_bias_kernel: 128
+  no_2d: False
+  mode_prob: "0.0,1.0,0.0"
+  checkpoint: './save/BEMT2_frag_distil/BEMT_Pretrain_49.pt'   # BEMT_Pretrain_2d_epoch10_lr_1e-4_temper_0.1_bs128_L12_norm_split_contrast_init, BEMT_Pretrain_3d(0.2_0.5_0.3)_epoch10_lr_1e-4_temper_0.1_bs128_L12_norm_split
+  head_drop_rate: 0.0
+  split_head: False
+  smi_vocab_size: 181
+  smi_max_position_embeddings: 505
+
+TRAIN:
+  task_name: 'BEMT'
+  seed: 8
+  output_dir: 'test'
+  batch_size: 16
+  num_workers: 2
+  weight_decay: 0.0
+  learning_rate: 0.0001
+  gradient_accumulation_steps: 1
+  num_train_epochs: 10
+  num_warmup_steps: 0.05
+  lr_scheduler_type: "linear"
+  usr_pretrain: True
+  task_type: "reg"  # choice: cls, reg
+  MaskAtomModeling: False
+  use_pretrain_fragment: False
+  mask_prob: 0.25
+  use_ema: False
+  clip_grad: False
+  freeze: False
+
+LOSS:
+  temperature: 0.1
