@@ -50,9 +50,6 @@ def parse_args():
     parser.add_argument("--config", type=str, default='smiles_frag',
                         choices=['smiles_frag_pocket', 'smiles_frag', 'smiles_frag_admet', 'target'],
                         help="Selected a config for this task.")
-    # smiles_frag_admet: 带admet预训练的模型
-    # smiles_frag_pocket: 训练之后又在glide-drugs上面finetune过的模型
-    # target: 活性靶点数据adapter
     parser.add_argument('--exp_id', type=int, default=-1)
     parser.add_argument('--fp16', type=int, default=True)
     parser.add_argument('--adapter', type=bool, default=False)
@@ -73,7 +70,6 @@ def parse_args():
     parser.add_argument('--temperature', type=float, default=1.0)
     parser.add_argument('--pdb', type=str, default='/home/pengbingxin/pbx/fraggpt/data/CBLB/8gcy_nx1607_sc_pre_protein_fix.pdb')  # './data/menin/pocket.pdb'  BTK.pdb
     parser.add_argument('--sdf', type=str, default='/home/pengbingxin/pbx/fraggpt/data/malt1_ligand.sdf')  # './data/menin/ligand.sdf'   cs_a4j7bm.sdf
-    # '/mnt/e/tangui/SMILES_NEW/data/PDBbind/train/1a86/1a86_protein_processed.pdb'   '/mnt/e/tangui/SMILES_NEW/data/PDBbind/train/1a86/1a86_ligand.sdf'
     parser.add_argument('--add_pocket', type=bool, default=False, help='是否加入pocket')
     parser.add_argument('--hard_save', type=bool, default=False, help='完全保留已有片段')
     parser.add_argument('--force_generate', type=bool, default=False, help='完全保留已有片段')
@@ -194,9 +190,6 @@ def smiles_augment(frags_list):
 
 def prefix2tensor(cfg, n_sample, tokenizer):
     if cfg.generate_mode == 'denovo':
-        # input_tensor = torch.LongTensor([tokenizer.convert_tokens_to_ids("<s>")])
-        # input_tensor = input_tensor.unsqueeze(-1).repeat(n_sample, 1).cuda()
-        # return input_tensor
         ori_frags_list = []
     elif cfg.generate_mode == 'linker':
         refs = cfg.reference.split('.')
@@ -739,103 +732,6 @@ def main():
     smi = pd.DataFrame(correct_smiles,columns=['smiles'])
     print(smi.head(10))
     
-    # print('success rate: ', count / args.n_generated)
-    # metrics = {}
-    # metrics['valid'] = len(get_valid_molecules(correct)) / args.n_generated
-    # unique_dict = get_unique_smiles(correct_smiles)
-    # metrics['unique'] = len(unique_dict) / len(get_valid_molecules(correct))
-    # metrics['save_rate'] = metrics['valid'] * metrics['unique']
 
-    # unique_smiles = list(unique_dict.keys())
-    # score, tanimoto_sim = get_four_score(Chem.MolFromSmiles(smiles), [Chem.MolFromSmiles(smi) for smi in unique_smiles])
-    # metrics['score'] = score
-    # print(metrics)
-    # if args.save_png:
-    #     save_output(args, unique_smiles, tanimoto_sim=tanimoto_sim)
-    # duration_times = round(time.time()-t_start, 2)
-    # print(f'生成{args.n_generated}个分子总共用时：{duration_times}s')
-    # with open('./outputs/generate_smiles.txt', 'w') as fw:
-    #     for smi in unique_smiles:
-    #         fw.write(smi + '\n')
-    # print(f"有效分子数量：{len(unique_smiles)}个")
-    # import pandas as pd
-    # df = pd.DataFrame(np.array(unique_smiles).reshape(-1, 1), columns=['smiles'])
-    # df.to_csv(args.save_dir, index=False)
-    # result = {}
-    # result['pdb'] = args.pdb
-    # result['sdf'] = args.sdf
-    # result['generate_mode'] = args.generate_mode
-    # result['reference'] = args.reference
-    # result['metrics'] = metrics
-    # result['duration'] = duration_times
-    # print(result)
 if __name__ == '__main__':
     main()
-'''
-
-
-cblb_linker_id28
-
-
-
-
-
-C[C@@H]1CN([*])CCC1.C[C@@H]2C[C@@](C3=NN=CN3C)([*])C2
-
-save/paper/smiles
-cblb_rgroup_id29
-Cc1ccc(CCNC(=O)NCCc2csc(N3CCCC3)n2)c(C)c1
-
-CCOC(=O)[C@]1(C)CCN(C(=O)CCCn2ccnn2)C1 c1cn(nn1)[*:1].CCOC(=O)[C@]1(C)CCN(C1)C(=O)CCC[*:1]
-Cc1ccccc1Nc1ncnc(Nc2nccs2)c1N c1csc(n1)N[*:1].Cc1ccccc1Nc1ncnc(c1N)[*:1]
-
-save/paper/smiles/FragGPT_pubchem77_pretrain_no_breakring_smiles_lora_8.pt
-
-CUDA_VISIBLE_DEVICES=3 python generate_frag_pocket.py --n_generated  1000000 \
-                                                    --generate_mode  rgroup \
-                                                    --pdb  /home/pengbingxin/pbx/fraggpt/data/menin/Menin_7uj4_noligand.pdb \
-                                                    --sdf  /home/pengbingxin/pbx/fraggpt/data/menin/rgroup_5613_22.sdf \
-                                                    --reference 'CCN(C(C1=CC(F)=CC=C1OC2=CN=CN=C2N3CC4(C3)CCN(CC4)CCC5=CC=C(C([*])=C5)C#N)=O)C(C)C'  \
-                                                    --save_dir /home/pengbingxin/pbx/fraggpt/outputs/rg_29_2.csv \
-                                                    --temperature 1.2 \
-                                                    --ckpt fraggpt \
-                                                    --model_ckpt smiles_delinker_admet_lora_18.pt \
-                                                    --config  smiles_frag  \
-                                                    --lora
-
-
-CUDA_VISIBLE_DEVICES=5 python generate_frag_pocket.py --n_generated  400000 \
-                                                    --generate_mode  rgroup \
-                                                    --pdb  /home/pengbingxin/pbx/fraggpt/data/MolecularFactory/8gng/8GNG-protein.pdb \
-                                                    --sdf  /home/pengbingxin/pbx/fraggpt/data/MolecularFactory/8gng/8GNG-ligand.sdf \
-                                                    --reference 'O=C1[C@H](N=C(C2=CC=CC=C2N1)C3=CC=CC=C3)N[*]'  \
-                                                    --save_dir /home/pengbingxin/pbx/fraggpt/outputs/FragGPT_8gng2.csv \
-                                                    --temperature 1.2 \
-                                                    --ckpt paper/cdk \
-                                                    --model_ckpt pretrain_cdk_lora_10.pt \
-                                                    --config  smiles_frag  \
-                                                    --lora
-'''
-'''
-glp1_6x0x_rgroup_id4
-CC1=C(F)C(C)=CC(N2C(N3C=CN([*])C3=O)=C4C(CCN(C(C5=CC6=CC([C@H]7CCOC(C)(C)C7)=CC=C6N5[C@@]8(C9=NOC(N9)=O)C[C@@H]8C)=O)[C@H]4C)=N2)=C1
-save/delinker/fraggpt_pretrain_lora09_4.pt
-'''
-
-'''
-gen = ['Cc1ccc(CCNC(=O)NCCc2csc(N3CCCC3)n2)c(C)c1','Cc1ccccc1Nc1ncnc(Nc2nccs2)c1N']
-'''
-
-'''
-#!/bin/bash
-
-# 设置输入参数
-pdb_file="/mnt/e/casestudy/5ou3.pdb"  
-protein_output="5ou3-protein.pdb"   
-ligand_output="5ou3-ligand.pdb"     
-
-# 分离蛋白质和配体
-grep "^ATOM" "$pdb_file" > "$protein_output"  
-grep "^HETATM" "$pdb_file" > "$ligand_output"  
-
-'''
